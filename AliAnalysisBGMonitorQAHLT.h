@@ -16,6 +16,7 @@ class AliAnalysisBGMonitorQAHLT : public AliAnalysisTaskSE {
     virtual void                    UserCreateOutputObjects();
     virtual void                    Exec(Option_t* option);
     virtual void                    Terminate(Option_t* option);
+    virtual void                    DrawHist(Int_t* ftrigger, Int_t fSpdT, Int_t fSpdC1, Int_t fSpdC2, Int_t* BBFlagC, Int_t* BBFlagA);
     // virtual void   Terminate(Option_t *);
     private:
     AliESDEvent* fESD;        //! ESD event

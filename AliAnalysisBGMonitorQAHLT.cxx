@@ -1,3 +1,16 @@
+// Analysis Task for the Quality Assurence of Beam Gas Monitoring
+//
+// This code will draw the Tracklet vs Cluster 2D histogram with various Triggers and PF conditions
+//
+// Authors
+// Alexander Borissov <aborisso@mail.cern.ch>
+// Bong-Hwi Lim <bong-hwi.lim@cern.ch>
+//
+// If you have any comment or question of this code,
+// Please send a mail to Bong-Hwi
+//
+// Last update: 2016.05.09 (blim)
+//
 //#include <Riostream.h>
 #include <iostream>
 #include"AliAnalysisBGMonitorQAHLT.h"
@@ -8,6 +21,7 @@
 #include <TH1D.h>
 #include"TCanvas.h"
 #include"TArrayI.h"
+#include "TString.h"
 #include"AliAnalysisTaskSE.h"
 #include"AliAnalysisManager.h"
 #include"AliESD.h"
@@ -106,15 +120,15 @@ void AliAnalysisBGMonitorQAHLT::UserCreateOutputObjects()
     fList->SetOwner(kTRUE);
     fList2 = new TList();
     fList2->SetOwner(kTRUE);
-    TH2F *hTotalTrkVsClsSPID = new TH2F("hTotalTrkVsClsSPID","; Spd : total",140,0,140,500,0,500);
+    TH2F *hTotalTrkVsClsSPID = new TH2F("hTotalTrkVsClsSPID_CINT7","; Spd : total",140,0,140,500,0,500);
     hTotalTrkVsClsSPID->GetXaxis()->SetTitle("Tracklet");
     hTotalTrkVsClsSPID->GetYaxis()->SetTitle("Cluster (fspdC1+fspdC2)");
     fList->Add(hTotalTrkVsClsSPID);
-    TH2F *hTotalTrkVsClsSPID_PF2 = new TH2F("hTotalTrkVsClsSPID_PF2","; Spd : total",140,0,140,500,0,500);
+    TH2F *hTotalTrkVsClsSPID_PF2 = new TH2F("hTotalTrkVsClsSPID_CINT7_PF2","; Spd : total",140,0,140,500,0,500);
     hTotalTrkVsClsSPID_PF2->GetXaxis()->SetTitle("Tracklet");
     hTotalTrkVsClsSPID_PF2->GetYaxis()->SetTitle("Cluster (fspdC1+fspdC2)");
     fList->Add(hTotalTrkVsClsSPID_PF2);
-    TH2F *hTotalTrkVsClsSPID_PF10 = new TH2F("hTotalTrkVsClsSPID_PF10","; Spd : total",140,0,140,500,0,500);
+    TH2F *hTotalTrkVsClsSPID_PF10 = new TH2F("hTotalTrkVsClsSPID_CINT7_PF10","; Spd : total",140,0,140,500,0,500);
     hTotalTrkVsClsSPID_PF10->GetXaxis()->SetTitle("Tracklet");
     hTotalTrkVsClsSPID_PF10->GetYaxis()->SetTitle("Cluster (fspdC1+fspdC2)");
     fList->Add(hTotalTrkVsClsSPID_PF10);
@@ -233,13 +247,23 @@ void AliAnalysisBGMonitorQAHLT::Exec(Option_t *)
     if(ftrigger[0]==1)((TH1F*)fList->FindObject("hNumEvents"))->Fill(1);
     if(ftrigger[1]==1)((TH1F*)fList->FindObject("hNumEvents"))->Fill(2);
     if(ftrigger[2]==1)((TH1F*)fList->FindObject("hNumEvents"))->Fill(3);
-    // Bool_t goodEvent;
     static Bool_t SelGoodEvent;
+    //
+    // List of the information needed to fill the histograms---------------------------------------------------
+    // fSpdT: GetNumberOfTracklets(), Int value
+    // fSpdC1, fSpdC2: GetNumberOfITSClusters(0), Int value
+    // BBFlagA, BBFlagC : esdV0friend->GetBBFlag(i,j), Int array, from 0 to 19
+    //     0 < i < 33: V0C info
+    //   31 < i < 64: V0A info
+    //     0 < j < 20: bunch window timing
 
+    DrawHist(&ftrigger[0], fSpdT, fSpdC1, fSpdC2, &BBFlagA[0], &BBFlagC[0]);
+
+    /*
     //-------------------------------------------------------CINT7-------------------------------------------------------
     if(ftrigger[0]) {  // trigger class for MB
         Printf("CINT7 triggred");
-        ((TH1F*)fList->FindObject("hTotalTrkVsClsSPID"))->Fill(fSpdT, fSpdC1+fSpdC2);
+        ((TH1F*)fList->FindObject("hTotalTrkVsClsSPID_CINT7"))->Fill(fSpdT, fSpdC1+fSpdC2);
         for(Int_t ii=1; ii<33; ii++){
             //___________
             SelGoodEvent = BBFlagA[11]<ii  &  BBFlagA[12]<ii  &  BBFlagA[13]<ii  &  BBFlagA[14]<ii  &  BBFlagA[15]<ii  &  BBFlagA[16]<ii  & BBFlagA[17]<ii; //BB-A 11-17
@@ -249,10 +273,10 @@ void AliAnalysisBGMonitorQAHLT::Exec(Option_t *)
             //___________
             if(SelGoodEvent) {
                 if(ii == 2){
-                    ((TH1F*)fList->FindObject("hTotalTrkVsClsSPID_PF2"))->Fill(fSpdT, fSpdC1+fSpdC2);
+                    ((TH1F*)fList->FindObject("hTotalTrkVsClsSPID_CINT7_PF2"))->Fill(fSpdT, fSpdC1+fSpdC2);
                 }
                 if(ii == 10){
-                    ((TH1F*)fList->FindObject("hTotalTrkVsClsSPID_PF10"))->Fill(fSpdT, fSpdC1+fSpdC2);
+                    ((TH1F*)fList->FindObject("hTotalTrkVsClsSPID_CINT7_PF10"))->Fill(fSpdT, fSpdC1+fSpdC2);
                 }
             }
         } // end of V0 flag loop
@@ -301,6 +325,7 @@ void AliAnalysisBGMonitorQAHLT::Exec(Option_t *)
             }
         } // end of V0 flag loop
     } // end of events in trigger loop
+    */
     PostData(1, fList);
     PostData(2, fList2);
     fTreeTrack2->Fill();
@@ -309,4 +334,34 @@ void AliAnalysisBGMonitorQAHLT::Exec(Option_t *)
 //________________________________________________________________________
 void AliAnalysisBGMonitorQAHLT::Terminate(Option_t *)
 {
+}
+//________________________________________________________________________
+void AliAnalysisBGMonitorQAHLT::DrawHist(Int_t* ftrigger, Int_t fSpdT, Int_t fSpdC1, Int_t fSpdC2, Int_t* BBFlagC, Int_t* BBFlagA){
+    TString triggername;
+    if(ftrigger[0]) triggername.Form("CINT7");
+    else if(ftrigger[1]) triggername.Form("V0M");
+    else if(ftrigger[2]) triggername.Form("SH2");
+    else { 
+        triggername.Form("CINT7");
+        Printf("Trigger info is something wrong!");
+    }
+    Bool_t SelGoodEvent = 0;
+    Printf(Form("%s triggred",triggername.Data()));
+    ((TH1F*)fList->FindObject(Form("hTotalTrkVsClsSPID_%s",triggername.Data())))->Fill(fSpdT, fSpdC1+fSpdC2);
+        for(Int_t ii=1; ii<33; ii++){
+            //___________
+            SelGoodEvent = BBFlagA[11]<ii  &  BBFlagA[12]<ii  &  BBFlagA[13]<ii  &  BBFlagA[14]<ii  &  BBFlagA[15]<ii  &  BBFlagA[16]<ii  & BBFlagA[17]<ii; //BB-A 11-17
+            SelGoodEvent &= BBFlagC[11]<ii  &  BBFlagC[12]<ii  &  BBFlagC[13]<ii  &  BBFlagC[14]<ii  &  BBFlagC[15]<ii  &  BBFlagC[16]<ii  &  BBFlagC[17]<ii; //BB-C 11-17
+            SelGoodEvent &= BBFlagA[9]<ii  &  BBFlagA[8]<ii  &  BBFlagA[7]<ii  & BBFlagA[6]<ii  & BBFlagA[5]<ii  & BBFlagA[4]<ii  & BBFlagA[3]<ii; //BB-A 3-9
+            SelGoodEvent &= BBFlagC[9]<ii  &  BBFlagC[8]<ii  &  BBFlagC[7]<ii  &  BBFlagC[6]<ii  &  BBFlagC[5]<ii  &  BBFlagC[4]<ii  & BBFlagC[3]<ii; //BB-C 3-9
+            //___________
+            if(SelGoodEvent) {
+                if(ii == 2){
+                    ((TH1F*)fList->FindObject(Form("hTotalTrkVsClsSPID_%s_PF2",triggername.Data())))->Fill(fSpdT, fSpdC1+fSpdC2);
+                }
+                if(ii == 10){
+                    ((TH1F*)fList->FindObject(Form("hTotalTrkVsClsSPID_%s_PF10",triggername.Data())))->Fill(fSpdT, fSpdC1+fSpdC2);
+                }
+            }
+        } // end of V0 flag loop
 }
