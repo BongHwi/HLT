@@ -248,7 +248,7 @@ void AliAnalysisBGMonitorQAHLT::Exec(Option_t *)
     //   31 < i < 64: V0A info
     //     0 < j < 20: bunch window timing
 
-    DrawHist(&ftrigger, fSpdT, fSpdC1, fSpdC2, &BBFlagA, &BBFlagC);
+    DrawHist(ftrigger, fSpdT, fSpdC1, fSpdC2, BBFlagA, BBFlagC);
 
     /*
     //-------------------------------------------------------CINT7-------------------------------------------------------
