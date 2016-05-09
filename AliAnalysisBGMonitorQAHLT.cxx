@@ -231,13 +231,13 @@ void AliAnalysisBGMonitorQAHLT::Exec(Option_t *)
     ntracks = fESD->GetNumberOfTracks(); // number of tracks (no quality cuts)
     //--- Trigger classes --//
     memset(ftrigger, 0, sizeof(Float_t)*ntr);
-    if(fESD->IsTriggerClassFired("CINT7-B-NOPF-ALLNOTRD") || fESD->IsTriggerClassFired("CINT7-S-NOPF-ALLNOTRD") || fESD->IsTriggerClassFired("CINT1-B-NOPF-ALLNOTRD") || fESD->IsTriggerClassFired("CINT1-S-NOPF-ALLNOTRD") || fESD->IsTriggerClassFired("CINT7-A-NOPF-CENT") || fESD->IsTriggerClassFired("CINT7-B-NOPF-CENT") || fESD->IsTriggerClassFired("CINT7-C-NOPF-CENT") || fESD->IsTriggerClassFired("CINT7-E-NOPF-CENT")) ftrigger[0] = 1; // CINT7 trigger
-    if(fESD->IsTriggerClassFired("CVHMV0M-A-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMV0M-B-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMV0M-C-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMV0M-E-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMV0M-B-SPD1-CENT") || fESD->IsTriggerClassFired("CVHMV0M-A-NOPF-CENTNOTRD") || fESD->IsTriggerClassFired("CVHMV0M-B-NOPF-CENTNOTRD") || fESD->IsTriggerClassFired("CVHMV0M-C-NOPF-CENTNOTRD") || fESD->IsTriggerClassFired("CVHMV0M-E-NOPF-CENTNOTRD")) ftrigger[1] = 1; // VOM trigger
-    if(fESD->IsTriggerClassFired("CVHMSH2-A-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMSH2-B-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMSH2-C-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMSH2-E-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMSH2-B-NOPF-ALL") || fESD->IsTriggerClassFired("CVHMSH2-B-NOPF-CENTNOTRD")) ftrigger[2] = 1; // SH2 trigger
+    if(fESD->IsTriggerClassFired("CINT7-B-NOPF-ALLNOTRD") || fESD->IsTriggerClassFired("CINT7-S-NOPF-ALLNOTRD") || fESD->IsTriggerClassFired("CINT1-B-NOPF-ALLNOTRD") || fESD->IsTriggerClassFired("CINT1-S-NOPF-ALLNOTRD") || fESD->IsTriggerClassFired("CINT7-A-NOPF-CENT") || fESD->IsTriggerClassFired("CINT7-B-NOPF-CENT") || fESD->IsTriggerClassFired("CINT7-C-NOPF-CENT") || fESD->IsTriggerClassFired("CINT7-E-NOPF-CENT")) ftrigger[1] = 1; // CINT7 trigger
+    if(fESD->IsTriggerClassFired("CVHMV0M-A-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMV0M-B-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMV0M-C-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMV0M-E-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMV0M-B-SPD1-CENT") || fESD->IsTriggerClassFired("CVHMV0M-A-NOPF-CENTNOTRD") || fESD->IsTriggerClassFired("CVHMV0M-B-NOPF-CENTNOTRD") || fESD->IsTriggerClassFired("CVHMV0M-C-NOPF-CENTNOTRD") || fESD->IsTriggerClassFired("CVHMV0M-E-NOPF-CENTNOTRD")) ftrigger[2] = 1; // VOM trigger
+    if(fESD->IsTriggerClassFired("CVHMSH2-A-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMSH2-B-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMSH2-C-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMSH2-E-NOPF-CENT") || fESD->IsTriggerClassFired("CVHMSH2-B-NOPF-ALL") || fESD->IsTriggerClassFired("CVHMSH2-B-NOPF-CENTNOTRD")) ftrigger[3] = 1; // SH2 trigger
     // count total event number (blim)
-    if(ftrigger[0]==1)((TH1F*)fList->FindObject("hNumEvents"))->Fill(1);
-    if(ftrigger[1]==1)((TH1F*)fList->FindObject("hNumEvents"))->Fill(2);
-    if(ftrigger[2]==1)((TH1F*)fList->FindObject("hNumEvents"))->Fill(3);
+    if(ftrigger[1]==1)((TH1F*)fList->FindObject("hNumEvents"))->Fill(1);
+    if(ftrigger[2]==1)((TH1F*)fList->FindObject("hNumEvents"))->Fill(2);
+    if(ftrigger[3]==1)((TH1F*)fList->FindObject("hNumEvents"))->Fill(3);
     static Bool_t SelGoodEvent;
     //
     // List of the information needed to fill the histograms---------------------------------------------------
@@ -328,9 +328,9 @@ void AliAnalysisBGMonitorQAHLT::Terminate(Option_t *)
 //________________________________________________________________________
 void AliAnalysisBGMonitorQAHLT::DrawHist(Int_t* ftrigger, Int_t fSpdT, Int_t fSpdC1, Int_t fSpdC2, Int_t* BBFlagC, Int_t* BBFlagA){
     TString triggername;
-    if(ftrigger[0]) triggername.Form("CINT7");
-    if(ftrigger[1]) triggername.Form("V0M");
-    if(ftrigger[2]) triggername.Form("SH2");
+    if(ftrigger[1]) triggername.Form("CINT7");
+    if(ftrigger[2]) triggername.Form("V0M");
+    if(ftrigger[3]) triggername.Form("SH2");
 
     Bool_t SelGoodEvent = 0;
     Printf(Form("%s triggred",triggername.Data()));
