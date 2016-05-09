@@ -332,7 +332,6 @@ void AliAnalysisBGMonitorQAHLT::DrawHist(Int_t* ftrigger, Int_t fSpdT, Int_t fSp
     if(ftrigger[1]) triggername.Form("V0M");
     if(ftrigger[2]) triggername.Form("SH2");
 
-    triggername.Form("CINT7");
     Bool_t SelGoodEvent = 0;
     Printf(Form("%s triggred",triggername.Data()));
     ((TH1F*)fList->FindObject(Form("hTotalTrkVsClsSPID_%s",triggername.Data())))->Fill(fSpdT, fSpdC1+fSpdC2);
