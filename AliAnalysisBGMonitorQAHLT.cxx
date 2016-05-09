@@ -54,7 +54,6 @@ fESD(0x0),
 fESDfriend(0x0),
 fTreeTrack2(0),
 fList(0),
-fList2(0),
 fUseTree(kFALSE),
 runNumber(0),
 fSpdC1(0),
@@ -78,7 +77,6 @@ fESD(0x0),
 fESDfriend(0x0),
 fTreeTrack2(0),
 fList(0),
-fList2(0),
 fUseTree(kFALSE),
 runNumber(0),
 fSpdC1(0),
@@ -95,8 +93,7 @@ nV0CBG(0)
 {
     // Constructor
     DefineInput(0, TChain::Class());
-    DefineOutput(1, TList::Class()); //CINT7
-    DefineOutput(2, TList::Class()); //V0M, SH2
+    DefineOutput(1, TList::Class());
     DefineOutput(0, TTree::Class()); //RunNumber
 }
 AliAnalysisBGMonitorQAHLT::~AliAnalysisBGMonitorQAHLT()
@@ -104,9 +101,6 @@ AliAnalysisBGMonitorQAHLT::~AliAnalysisBGMonitorQAHLT()
     // destructor
     if(fList) {
         delete fList;     // at the end of your task, it is deleted from memory by calling this function
-    }
-    if(fList2) {
-        delete fList2;     // at the end of your task, it is deleted from memory by calling this function
     }
 }
 
@@ -118,8 +112,6 @@ void AliAnalysisBGMonitorQAHLT::UserCreateOutputObjects()
     PostData(0, fTreeTrack2);
     fList = new TList();
     fList->SetOwner(kTRUE);
-    fList2 = new TList();
-    fList2->SetOwner(kTRUE);
     TH2F *hTotalTrkVsClsSPID = new TH2F("hTotalTrkVsClsSPID_CINT7","; Spd : total",140,0,140,500,0,500);
     hTotalTrkVsClsSPID->GetXaxis()->SetTitle("Tracklet");
     hTotalTrkVsClsSPID->GetYaxis()->SetTitle("Cluster (fspdC1+fspdC2)");
@@ -136,34 +128,33 @@ void AliAnalysisBGMonitorQAHLT::UserCreateOutputObjects()
     TH2F *hTotalTrkVsClsSPID_V0M = new TH2F("hTotalTrkVsClsSPID_V0M","; Spd : total",140,0,140,500,0,500);
     hTotalTrkVsClsSPID_V0M->GetXaxis()->SetTitle("Tracklet");
     hTotalTrkVsClsSPID_V0M->GetYaxis()->SetTitle("Cluster (fspdC1+fspdC2)");
-    fList2->Add(hTotalTrkVsClsSPID_V0M);
+    fList->Add(hTotalTrkVsClsSPID_V0M);
     TH2F *hTotalTrkVsClsSPID_V0M_PF2 = new TH2F("hTotalTrkVsClsSPID_V0M_PF2","; Spd : total",140,0,140,500,0,500);
     hTotalTrkVsClsSPID_V0M_PF2->GetXaxis()->SetTitle("Tracklet");
     hTotalTrkVsClsSPID_V0M_PF2->GetYaxis()->SetTitle("Cluster (fspdC1+fspdC2)");
-    fList2->Add(hTotalTrkVsClsSPID_V0M_PF2);
+    fList->Add(hTotalTrkVsClsSPID_V0M_PF2);
     TH2F *hTotalTrkVsClsSPID_V0M_PF10 = new TH2F("hTotalTrkVsClsSPID_V0M_PF10","; Spd : total",140,0,140,500,0,500);
     hTotalTrkVsClsSPID_V0M_PF10->GetXaxis()->SetTitle("Tracklet");
     hTotalTrkVsClsSPID_V0M_PF10->GetYaxis()->SetTitle("Cluster (fspdC1+fspdC2)");
-    fList2->Add(hTotalTrkVsClsSPID_V0M_PF10);
+    fList->Add(hTotalTrkVsClsSPID_V0M_PF10);
     //______________________________
     TH2F *hTotalTrkVsClsSPID_SH2 = new TH2F("hTotalTrkVsClsSPID_SH2","; Spd : total",140,0,140,500,0,500);
     hTotalTrkVsClsSPID_SH2->GetXaxis()->SetTitle("Tracklet");
     hTotalTrkVsClsSPID_SH2->GetYaxis()->SetTitle("Cluster (fspdC1+fspdC2)");
-    fList2->Add(hTotalTrkVsClsSPID_SH2);
+    fList->Add(hTotalTrkVsClsSPID_SH2);
     TH2F *hTotalTrkVsClsSPID_SH2_PF2 = new TH2F("hTotalTrkVsClsSPID_SH2_PF2","; Spd : total",140,0,140,500,0,500);
     hTotalTrkVsClsSPID_SH2_PF2->GetXaxis()->SetTitle("Tracklet");
     hTotalTrkVsClsSPID_SH2_PF2->GetYaxis()->SetTitle("Cluster (fspdC1+fspdC2)");
-    fList2->Add(hTotalTrkVsClsSPID_SH2_PF2);
+    fList->Add(hTotalTrkVsClsSPID_SH2_PF2);
     TH2F *hTotalTrkVsClsSPID_SH2_PF10 = new TH2F("hTotalTrkVsClsSPID_SH2_PF10","; Spd : total",140,0,140,500,0,500);
     hTotalTrkVsClsSPID_SH2_PF10->GetXaxis()->SetTitle("Tracklet");
     hTotalTrkVsClsSPID_SH2_PF10->GetYaxis()->SetTitle("Cluster (fspdC1+fspdC2)");
-    fList2->Add(hTotalTrkVsClsSPID_SH2_PF10);
+    fList->Add(hTotalTrkVsClsSPID_SH2_PF10);
     //______________________________
     //histogram for event list(blim)
     TH1F *hNumEvents  = new TH1F("hNumEvents","total event",10,0,10);
     fList->Add(hNumEvents);
     PostData(1, fList);
-    PostData(2, fList2);
 }
 
 //________________________________________________________________________
@@ -285,7 +276,7 @@ void AliAnalysisBGMonitorQAHLT::Exec(Option_t *)
     //-------------------------------------------------------V0M-------------------------------------------------------
     if(ftrigger[1]) {  // trigger class for HM // add new List for both result 2015.08.20. (blim)
         Printf("V0M triggred");
-        ((TH1F*)fList2->FindObject("hTotalTrkVsClsSPID_V0M"))->Fill(fSpdT, fSpdC1+fSpdC2);
+        ((TH1F*)fList->FindObject("hTotalTrkVsClsSPID_V0M"))->Fill(fSpdT, fSpdC1+fSpdC2);
         for(Int_t ii=1; ii<33; ii++){
             //___________
             SelGoodEvent = BBFlagA[11]<ii  &  BBFlagA[12]<ii  &  BBFlagA[13]<ii  &  BBFlagA[14]<ii  &  BBFlagA[15]<ii  &  BBFlagA[16]<ii  & BBFlagA[17]<ii; //BB-A 11-17
@@ -295,10 +286,10 @@ void AliAnalysisBGMonitorQAHLT::Exec(Option_t *)
             //___________
             if(SelGoodEvent) {
                 if(ii == 2){
-                    ((TH1F*)fList2->FindObject("hTotalTrkVsClsSPID_V0M_PF2"))->Fill(fSpdT, fSpdC1+fSpdC2);
+                    ((TH1F*)fList->FindObject("hTotalTrkVsClsSPID_V0M_PF2"))->Fill(fSpdT, fSpdC1+fSpdC2);
                 }
                 if(ii == 10){
-                    ((TH1F*)fList2->FindObject("hTotalTrkVsClsSPID_V0M_PF10"))->Fill(fSpdT, fSpdC1+fSpdC2);
+                    ((TH1F*)fList->FindObject("hTotalTrkVsClsSPID_V0M_PF10"))->Fill(fSpdT, fSpdC1+fSpdC2);
                 }
             }
         } // end of V0 flag loop
@@ -307,7 +298,7 @@ void AliAnalysisBGMonitorQAHLT::Exec(Option_t *)
     //-------------------------------------------------------SH2-------------------------------------------------------
     if(ftrigger[2]) {  // trigger class for HM // add new List for both result 2015.08.20. (blim)
         Printf("SH2 triggred");
-        ((TH1F*)fList2->FindObject("hTotalTrkVsClsSPID_SH2"))->Fill(fSpdT, fSpdC1+fSpdC2);
+        ((TH1F*)fList->FindObject("hTotalTrkVsClsSPID_SH2"))->Fill(fSpdT, fSpdC1+fSpdC2);
         for(Int_t ii=1; ii<33; ii++){
             //___________
             SelGoodEvent = BBFlagA[11]<ii  &  BBFlagA[12]<ii  &  BBFlagA[13]<ii  &  BBFlagA[14]<ii  &  BBFlagA[15]<ii  &  BBFlagA[16]<ii  & BBFlagA[17]<ii; //BB-A 11-17
@@ -317,17 +308,16 @@ void AliAnalysisBGMonitorQAHLT::Exec(Option_t *)
             //___________
             if(SelGoodEvent) {
                 if(ii == 2){
-                    ((TH1F*)fList2->FindObject("hTotalTrkVsClsSPID_SH2_PF2"))->Fill(fSpdT, fSpdC1+fSpdC2);
+                    ((TH1F*)fList->FindObject("hTotalTrkVsClsSPID_SH2_PF2"))->Fill(fSpdT, fSpdC1+fSpdC2);
                 }
                 if(ii == 10){
-                    ((TH1F*)fList2->FindObject("hTotalTrkVsClsSPID_SH2_PF10"))->Fill(fSpdT, fSpdC1+fSpdC2);
+                    ((TH1F*)fList->FindObject("hTotalTrkVsClsSPID_SH2_PF10"))->Fill(fSpdT, fSpdC1+fSpdC2);
                 }
             }
         } // end of V0 flag loop
     } // end of events in trigger loop
     */
     PostData(1, fList);
-    PostData(2, fList2);
     fTreeTrack2->Fill();
     PostData(0, fTreeTrack2);
 }
@@ -339,12 +329,9 @@ void AliAnalysisBGMonitorQAHLT::Terminate(Option_t *)
 void AliAnalysisBGMonitorQAHLT::DrawHist(Int_t* ftrigger, Int_t fSpdT, Int_t fSpdC1, Int_t fSpdC2, Int_t* BBFlagC, Int_t* BBFlagA){
     TString triggername;
     if(ftrigger[0]) triggername.Form("CINT7");
-    else if(ftrigger[1]) triggername.Form("V0M");
-    else if(ftrigger[2]) triggername.Form("SH2");
-    else { 
-        triggername.Form("CINT7");
-        Printf("Trigger info is something wrong!");
-    }
+    if(ftrigger[1]) triggername.Form("V0M");
+    if(ftrigger[2]) triggername.Form("SH2");
+
     Bool_t SelGoodEvent = 0;
     Printf(Form("%s triggred",triggername.Data()));
     ((TH1F*)fList->FindObject(Form("hTotalTrkVsClsSPID_%s",triggername.Data())))->Fill(fSpdT, fSpdC1+fSpdC2);
