@@ -79,9 +79,6 @@ class AliAnalysisBGMonitorQAHLT : public AliAnalysisTaskSE {
   Int_t VGC;
   Int_t VTX;
   Int_t bgID;
-    
-  Int_t bgID2;
-    
   Int_t t0PileUp;
   Int_t spdPileUp;
   Int_t spdPileUpOutOfBunch;
