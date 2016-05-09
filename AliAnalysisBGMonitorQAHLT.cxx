@@ -247,7 +247,7 @@ void AliAnalysisBGMonitorQAHLT::Exec(Option_t *)
     //     0 < i < 33: V0C info
     //   31 < i < 64: V0A info
     //     0 < j < 20: bunch window timing
-
+    cout << ftrigger[0] << " "  << ftrigger[1] << " " <<  ftrigger[2] << " " << endl;
     DrawHist(ftrigger, fSpdT, fSpdC1, fSpdC2, BBFlagA, BBFlagC);
 
     /*
